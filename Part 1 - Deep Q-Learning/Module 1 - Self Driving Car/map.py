@@ -38,8 +38,10 @@ n_points = 0
 length = 0
 # Getting our AI, which we call "brain", and that contains our neural network that represents our Q-function
 brain = Dqn(5, 3, 0.9)
-action2rotation = [0, 10, -10]
+action2rotation = [0, 20, -20]
 last_reward = 0
+living_cost = 0.001
+living_cost_accumulated = 0
 scores = []
 # Initializing the map
 first_update = True
@@ -136,6 +138,8 @@ class Game(Widget):
         global goal_y
         global longueur
         global largeur
+        global living_cost
+        global living_cost_accumulated
         longueur = self.width
         largeur = self.height
         if first_update:
@@ -177,6 +181,9 @@ class Game(Widget):
             goal_x = self.width-goal_x
             goal_y = self.height-goal_y
             last_reward = 2
+            living_cost_accumulated = 0
+        living_cost_accumulated += living_cost
+        last_reward -= living_cost_accumulated
         last_distance = distance
 # Adding the painting tools
 
@@ -404,12 +411,14 @@ class CarApp(App):
             y2 = y.copy()
             y2.resize(plotSize, refcheck=False)
             self.plotData, = ax.plot(x, y2, label="Brain score")
+            plt.autoscale(tight=True)
             plt.show()
         else:
             y = np.asarray(scores)[-plotSize:]
             y2 = y.copy()
             y2.resize(plotSize, refcheck=False)
             self.plotData.set_ydata(y2)
+            plt.autoscale(tight=True)
             self.fig.canvas.draw()
             self.fig.canvas.flush_events()
 

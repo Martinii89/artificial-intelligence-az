@@ -31,7 +31,7 @@ class Network(nn.Module):
 
     def forward(self, state):
         x = F.relu(self.fc1(state))
-        x = F.relu(sef.fc2(x))
+        x = F.relu(self.fc2(x))
         q_values = self.fc3(x)
         return q_values
 
